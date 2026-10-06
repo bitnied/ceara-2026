@@ -173,6 +173,25 @@ main[data-view="semana"], main[data-view="explorar"], main[data-view="dicas"] { 
 .badge.hoje { background: var(--accent); color: #2A1605; }
 .badge.feriado { background: var(--accent-soft); color: var(--text); }
 .badge.fechado { background: var(--warn-soft); color: var(--warn); }
+.badge.chuva { display: inline-flex; align-items: center; gap: 4px; background: var(--primary-soft); color: var(--primary); }
+
+/* etiquetas de tempo e custo */
+.tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 0; }
+.tag {
+  display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px; border-radius: 999px;
+  font-size: .72rem; font-weight: 800; line-height: 1.6; white-space: nowrap; background: var(--surface-2); color: var(--muted);
+}
+.tag .ic { width: .95em; height: .95em; }
+.tag.clima-sol { background: var(--accent-soft); color: var(--medio); }
+.tag.clima-coberto { background: var(--primary-soft); color: var(--primary); }
+.tag.custo-gratis { background: var(--ok-soft); color: var(--ok); }
+.item-rodape > .btn-txt { margin-top: 4px; padding-left: 2px; }
+
+/* filtros de tempo e custo ao planejar */
+.filtros-plan { margin-top: 14px; display: grid; gap: 8px; }
+.filtro-linha { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.fl-rot { font-size: .76rem; text-transform: uppercase; letter-spacing: .06em; font-weight: 900; color: var(--muted); width: 52px; }
+.fl-nota { font-size: .8rem; color: var(--muted); margin: -2px 0 0 58px; }
 .avisos { margin: 10px 0 0; padding: 0 0 0 18px; font-size: .85rem; color: var(--muted); }
 .avisos li { margin: 2px 0; }
 .voo {
