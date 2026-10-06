@@ -62,7 +62,10 @@ Web app (HTML, CSS e JavaScript puros, sem build) com o roteiro da viagem ao Cea
   - **Pouso / Voo de volta** (topo dos dias 11 e 18): ao mudar o horário, o dia inteiro se ajusta.
   - **Plano do dia:** troca por um dos planos prontos (2–3 por dia).
 - **Semana:** visão geral editável. Tocar num programa edita; "+ Adicionar" em cada período; "Planos" troca o plano do dia; o filtro por pessoa mostra a semana de cada um.
-- **Explorar:** 39 passeios e programas com fotos, filtros (bom para o Leo, para os idosos, para a Luna, ritmo leve, até 30 km) e **Saber mais** (galeria de fotos, atrações detalhadas, "Para a família", como ir, links para mapa, site, Wikipédia, fotos, vídeos e Google).
+- **Tempo e custo:** cada passeio mostra se **precisa de sol**, se **dá com chuva fraca** ou se **funciona com chuva**, e o custo (**grátis, $ baixo, $$ médio, $$$ alto**).
+  - Ao montar o roteiro ("Adicionar" ou "Opções"), há filtros de **Tempo** (qualquer tempo / dia de chuva) e **Custo** (qualquer / grátis ou baixo / até médio).
+  - Quando a previsão do dia passa de 50% de chuva, o filtro "Dia de chuva" já vem ligado, o dia ganha o selo "Chance de chuva" e os passeios que precisam de sol mostram um aviso com o botão **Ver opções para dia de chuva**.
+- **Explorar:** 39 passeios e programas com fotos, filtros (bom para o Leo, para os idosos, para a Luna, ritmo leve, até 30 km, funciona com chuva, grátis ou baixo custo) e **Saber mais** (galeria de fotos, atrações detalhadas, "Para a família", como ir, links para mapa, site, Wikipédia, fotos, vídeos e Google).
 - **Preparar:** checklists (reservas, documentos, mala, bebê) e dicas.
 - **Ícone de pessoas (topo):** nomes, siglas, "ritmo leve", horários dos voos, compartilhar e restaurar.
 - **Desfazer:** toda mudança pode ser desfeita pelo aviso que aparece embaixo.
@@ -100,6 +103,9 @@ CLAUDE.md             contexto para continuar o projeto com o Claude Code
   - `id`, `nome`, `cat` (`complexo`, `praia`, `batevolta`, `fortaleza`, `gastronomia`, `logistica`);
   - `local`, `tempo`, `km`, `duracao`, `preco`;
   - `periodos`, `dias` (dias da semana em que funciona; 0 = domingo), `abreFeriado`, `intensidade`;
+  - **tempo e custo** ficam em `TEMPO_E_CUSTO` (`id: [clima, custo, nota do tempo, nota do custo]`):
+    - clima: `sol` (depende de tempo bom), `misto` (melhor com sol, dá com chuva fraca), `coberto` (funciona com chuva);
+    - custo por pessoa: `gratis`, `baixo` (até ~R$ 50), `medio` (R$ 50–150), `alto` (acima de R$ 150);
   - `publico: { bebe, idosos, crianca }`: 2 = ótimo, 1 = com ressalvas, 0 = não recomendado;
   - `publicoNota`, `resumo`, `descricao`, `destaques`, `dicas`, `transporte`, `maps`.
 - `DIAS`: para cada data, `titulo`, `avisos` e `planos` (o primeiro é o padrão). Cada item do plano: `{ a: idAtividade, p: período, h: 'HH:MM', q: [grupos ou ids], n: 'observação' }`.
@@ -166,6 +172,8 @@ Para continuar com o Claude Code, abra a pasta e peça o que quiser: o arquivo `
 
 - **v1:** roteiro com 8 dias e planos alternativos, explorar passeios, checklists, compartilhamento por link ou arquivo, previsão do tempo, PWA.
 - **v2:** nomes da família, sem emojis (ícones de traço e fotos), "Opções para o grupo" ao tocar nas pessoas, grupos divididos no mesmo horário, "Saber mais" com galeria e links, horário do voo que ajusta o dia, empurrar os próximos horários, Semana editável. Também corrigiu a camada invisível que bloqueava os toques no Safari.
+
+- **v3:** dependência do tempo (precisa de sol / dá com chuva fraca / funciona com chuva) e nível de custo (grátis / baixo / médio / alto) em cada passeio, com filtros ao montar o roteiro, avisos pela previsão do tempo e opções para dia de chuva.
 
 ### Ideias para depois
 

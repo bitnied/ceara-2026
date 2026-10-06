@@ -1,5 +1,5 @@
 /* Service worker: deixa o roteiro funcionando offline durante a viagem. */
-const CACHE = 'ceara2026-v3';
+const CACHE = 'ceara2026-v4';
 const FOTOS_CACHE = 'ceara2026-fotos';
 const ARQUIVOS = ['./', 'index.html', 'css/styles.css', 'js/icons.js', 'js/data.js', 'js/fotos.js', 'js/app.js', 'manifest.webmanifest', 'icons/icon.svg'];
 

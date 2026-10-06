@@ -20,6 +20,7 @@ Tiago (T) e Elisa (E), casal de 40 anos · Alter (Al) e Arcenia (Ar), casal 60+ 
 - `escolherPrograma(ctx, actId)`: se as pessoas são as mesmas, troca o programa. Se é um subconjunto, divide o grupo (cria um item no mesmo horário e tira essas pessoas do original e de itens que começam no mesmo horário).
 - `deslocar(iso, aPartirMin, delta, pessoas?, excetoId?)` empurra horários. O pouso desloca a partir do horário antigo do pouso; a volta desloca o dia inteiro.
 - Todo evento passa por delegação `data-action` (click), `data-input` (input/change) e `data-form` (submit). Mudanças que o usuário pode querer reverter usam `toast(msg, desfazerFn)` com uma cópia (`clone(state)`).
+- Tempo e custo: `TEMPO_E_CUSTO` em `data.js` define `clima` (`sol`/`misto`/`coberto`) e `custo` (`gratis`/`baixo`/`medio`/`alto`) de cada passeio. `chuvaDoDia(iso)` lê a previsão (Open-Meteo); a partir de `CHUVA_LIMIAR` (50%), a folha de planejar abre com o filtro "Dia de chuva" (`ctx.tempo`), e `avisoChuva()` alerta nos passeios `sol` (e nos `misto` a partir de 70%). `ctx.custo` filtra por custo máximo.
 - Migração: `normalizar()` troca os nomes genéricos antigos (`NOMES_ANTIGOS`) pelos reais e preenche campos novos.
 
 ## Armadilhas já encontradas
