@@ -1,0 +1,14 @@
+{
+  "name": "Ceará 2026 · Roteiro da família",
+  "short_name": "Ceará 2026",
+  "description": "Roteiro de 11 a 18 de outubro de 2026 no Beach Park Acqua Resort.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FBF7F0",
+  "theme_color": "#0F7C86",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

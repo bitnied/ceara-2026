@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ceará 2026</title>
+  <meta name="description" content="Roteiro da família no Ceará: 11 a 18 de outubro de 2026, no Beach Park Acqua Resort.">
+  <meta name="theme-color" content="#FBF7F0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0F1719" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Ceará 2026">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="pular" href="#main">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="topo-inner">
+      <div class="marca">
+        <span class="logo" aria-hidden="true"><img src="icons/icon.svg" alt=""></span>
+        <div>
+          <h1>Ceará 2026</h1>
+          <p id="sub-cabecalho" class="sub-cab"></p>
+        </div>
+      </div>
+      <div class="topo-acoes">
+        <button class="icone-btn" data-action="compartilhar" data-icon="share" aria-label="Compartilhar roteiro" title="Compartilhar"></button>
+        <button class="icone-btn" data-action="ajustes" data-icon="users" aria-label="Pessoas e ajustes" title="Pessoas e ajustes"></button>
+      </div>
+    </div>
+    <nav class="tabs" aria-label="Seções">
+      <button class="tab" data-action="tab" data-view="roteiro" data-icon="day">Dia a dia</button>
+      <button class="tab" data-action="tab" data-view="semana" data-icon="week">Semana</button>
+      <button class="tab" data-action="tab" data-view="explorar" data-icon="compass">Explorar</button>
+      <button class="tab" data-action="tab" data-view="dicas" data-icon="list">Preparar</button>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1"></main>
+
+  <div id="sheet" class="sheet-wrap" hidden>
+    <div id="sheet-body" class="sheet" role="dialog" aria-modal="true" aria-label="Detalhes"></div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <noscript><p style="padding:16px">Este roteiro precisa de JavaScript ativado.</p></noscript>
+
+  <script src="js/icons.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/fotos.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
