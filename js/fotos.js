@@ -719,5 +719,62 @@ const FOTOS = {
    "p": "https://commons.wikimedia.org/wiki/File:Aeroporto_de_Fortaleza_Pinto_Martins_43.jpg",
    "a": "Amancio do Compromisso"
   }
+ ],
+ "tapioqueiras": [
+  {
+   "t": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Tapioca_com_queijo_coalho_9354_orig.jpg/960px-Tapioca_com_queijo_coalho_9354_orig.jpg",
+   "p": "https://commons.wikimedia.org/wiki/File:Tapioca_com_queijo_coalho_9354_orig.jpg",
+   "a": "Silvagc"
+  },
+  {
+   "t": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/IMG0521_Venda_de_tapioca_e_beiju_em_mercado_popular_do_Nordeste_do_Brasil._Jacobina_-_Bahia.jpg/960px-IMG0521_Venda_de_tapioca_e_beiju_em_mercado_popular_do_Nordeste_do_Brasil._Jacobina_-_Bahia.jpg",
+   "p": "https://commons.wikimedia.org/wiki/File:IMG0521_Venda_de_tapioca_e_beiju_em_mercado_popular_do_Nordeste_do_Brasil._Jacobina_-_Bahia.jpg",
+   "a": "Henry194507"
+  }
+ ],
+ "show-humor": [
+  {
+   "t": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a1/Museu_do_Humor_%26_Teatro_Chico_Anysio.jpg/960px-Museu_do_Humor_%26_Teatro_Chico_Anysio.jpg",
+   "p": "https://commons.wikimedia.org/wiki/File:Museu_do_Humor_%26_Teatro_Chico_Anysio.jpg",
+   "a": "Joelkaula"
+  }
+ ],
+ "mercado-bebe": [
+  {
+   "t": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Farm%C3%A1cia_Oswaldo_Cruz_em_Fortaleza.jpg/960px-Farm%C3%A1cia_Oswaldo_Cruz_em_Fortaleza.jpg",
+   "p": "https://commons.wikimedia.org/wiki/File:Farm%C3%A1cia_Oswaldo_Cruz_em_Fortaleza.jpg",
+   "a": "GLandovsky"
+  }
+ ],
+ "coco-bambu": [
+  {
+   "t": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/Bai%C3%A3o_de_dois.jpg/960px-Bai%C3%A3o_de_dois.jpg",
+   "p": "https://commons.wikimedia.org/wiki/File:Bai%C3%A3o_de_dois.jpg",
+   "a": "Zé Carlos Barretta"
+  },
+  {
+   "t": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/Bai%C3%A3o_de_Dois_%28superior_view%29.jpg/960px-Bai%C3%A3o_de_Dois_%28superior_view%29.jpg",
+   "p": "https://commons.wikimedia.org/wiki/File:Bai%C3%A3o_de_Dois_(superior_view).jpg",
+   "a": "Senado Federal"
+  },
+  {
+   "t": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/df/Carne_de_sol%2C_macaxeira_e_cebola_-_Bonsucesso_Rio_de_Janeiro.jpg/960px-Carne_de_sol%2C_macaxeira_e_cebola_-_Bonsucesso_Rio_de_Janeiro.jpg",
+   "p": "https://commons.wikimedia.org/wiki/File:Carne_de_sol,_macaxeira_e_cebola_-_Bonsucesso_Rio_de_Janeiro.jpg",
+   "a": "Eduardo P"
+  }
+ ],
+ "descanso": [
+  {
+   "t": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Acqua_Beach_Park_Resort.jpg/960px-Acqua_Beach_Park_Resort.jpg",
+   "p": "https://commons.wikimedia.org/wiki/File:Acqua_Beach_Park_Resort.jpg",
+   "a": "Beach Park"
+  }
+ ],
+ "checkout": [
+  {
+   "t": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Acqua_Beach_Park_Resort.jpg/960px-Acqua_Beach_Park_Resort.jpg",
+   "p": "https://commons.wikimedia.org/wiki/File:Acqua_Beach_Park_Resort.jpg",
+   "a": "Beach Park"
+  }
  ]
 };
