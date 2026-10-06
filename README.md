@@ -2,7 +2,8 @@
 
 Web app (HTML, CSS e JavaScript puros, sem build) com o roteiro da viagem ao Ceará de **11 a 18 de outubro de 2026**, hospedados no **Beach Park Acqua Resort** (Porto das Dunas, Aquiraz).
 
-- **Site publicado:** _ver seção [Publicação](#publicação-github-pages)_
+- **Site publicado:** https://bitnied.github.io/ceara-2026/
+- **Repositório:** https://github.com/bitnied/ceara-2026
 - **Funciona no celular** e pode ser adicionado à tela inicial (PWA). Depois do primeiro acesso, funciona offline.
 
 ---
@@ -118,7 +119,12 @@ Abra http://localhost:8000. Abrindo o `index.html` direto (file://) tudo funcion
 
 ## Publicação (GitHub Pages)
 
-O site é servido pelo GitHub Pages a partir da branch `main`, pasta raiz (`/`).
+O site é servido pelo GitHub Pages a partir da branch `main`, pasta raiz (`/`). Configuração em **Settings → Pages → Deploy from a branch → `main` / `(root)`**.
+
+- Site: https://bitnied.github.io/ceara-2026/
+- Repositório (público): https://github.com/bitnied/ceara-2026 (conta `bitnied`)
+
+**Como foi publicado (06/10/2026):** a máquina original não tinha GitHub CLI nem chave SSH. O repositório foi criado e os arquivos enviados pela interface web do GitHub (Add file → Upload files, uma pasta por vez), e o Pages foi ativado em Settings. Para as próximas atualizações, o mais simples é trabalhar com `git` numa máquina autenticada (veja abaixo).
 
 **Para publicar uma atualização:**
 
@@ -137,9 +143,13 @@ O Pages atualiza em 1–2 minutos (veja em **Actions** no GitHub).
 **Para continuar em outra máquina:**
 
 ```bash
-git clone https://github.com/<usuario>/ceara-2026.git
+git clone https://github.com/bitnied/ceara-2026.git
 cd ceara-2026
 ```
+
+Para conseguir dar `git push`, autentique uma vez nessa máquina. O jeito mais fácil é instalar o [GitHub CLI](https://cli.github.com) e rodar `gh auth login`. Uma chave SSH também serve.
+
+**Sem git (pelo navegador):** no GitHub, abra o arquivo, clique no lápis (Edit), altere e use **Commit changes**. Para trocar arquivos inteiros: **Add file → Upload files**, na pasta certa (ex.: `https://github.com/bitnied/ceara-2026/upload/main/js`).
 
 Para continuar com o Claude Code, abra a pasta e peça o que quiser: o arquivo `CLAUDE.md` traz todo o contexto.
 

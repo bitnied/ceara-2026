@@ -1,6 +1,6 @@
 # CLAUDE.md: contexto do projeto Ceará 2026
 
-Web app estático (sem build, sem dependências) com o roteiro de férias da família no Ceará, de 11 a 18/10/2026, no Beach Park Acqua Resort. Publicado no GitHub Pages (branch `main`, raiz). O usuário (Tiago) fala português: responda e escreva a interface em **português do Brasil**.
+Web app estático (sem build, sem dependências) com o roteiro de férias da família no Ceará, de 11 a 18/10/2026, no Beach Park Acqua Resort. Publicado no GitHub Pages (branch `main`, raiz): site https://bitnied.github.io/ceara-2026/ · repositório público https://github.com/bitnied/ceara-2026 (conta `bitnied`). O usuário (Tiago) fala português: responda e escreva a interface em **português do Brasil**.
 
 ## Família (já configurada em `js/data.js` → `PESSOAS_PADRAO`)
 Tiago (T) e Elisa (E), casal de 40 anos · Alter (Al) e Arcenia (Ar), casal 60+ · Lizete (Li), 60+, marcada como "ritmo leve" · Luna (Lu), 9 anos · Leo (Le), bebê de 1 ano e meio. Ids p1…p7, nessa ordem. Os idosos variam entre "bem dispostos" e "moderados".
