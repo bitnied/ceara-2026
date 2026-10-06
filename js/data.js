@@ -1096,4 +1096,67 @@ const SAIBA_MAIS = {
   'checkout': { dur: 90 },
   'transfer-volta': { dur: 60, wiki: 'Aeroporto Internacional de Fortaleza' },
 };
-ATIVIDADES.forEach((a) => Object.assign(a, SAIBA_MAIS[a.id] || {}));
+/* ---------------------------------------------------------
+   Tempo e custo de cada passeio
+   clima: 'sol' = depende de tempo bom · 'misto' = melhor com sol, dá com chuva fraca · 'coberto' = funciona com chuva
+   custo (por pessoa, aprox.): 'gratis' · 'baixo' (até ~R$ 50) · 'medio' (R$ 50–150) · 'alto' (acima de R$ 150)
+   Formato: id: [clima, custo, nota sobre o tempo, nota sobre o custo]
+   --------------------------------------------------------- */
+const NIVEIS_CLIMA = {
+  sol: { nome: 'Depende de tempo bom', curto: 'Precisa de sol' },
+  misto: { nome: 'Melhor com tempo bom', curto: 'Dá com chuva fraca' },
+  coberto: { nome: 'Funciona com chuva', curto: 'Ok com chuva' },
+};
+const NIVEIS_CUSTO = {
+  gratis: { nome: 'Grátis', faixa: 'sem custo (ou já incluso)' },
+  baixo: { nome: 'Custo baixo', faixa: 'até ~R$ 50 por pessoa' },
+  medio: { nome: 'Custo médio', faixa: 'R$ 50–150 por pessoa' },
+  alto: { nome: 'Custo alto', faixa: 'acima de R$ 150 por pessoa' },
+};
+const TEMPO_E_CUSTO = {
+  'bp-aquapark': ['misto', 'alto', 'Chuva fraca não fecha o parque; com raios, os toboáguas param até passar.'],
+  'resort-piscinas': ['misto', 'gratis', 'Com chuva, dá para trocar pelo salão de jogos e o Kids Club.', 'Incluso na hospedagem.'],
+  'kids-club': ['coberto', 'gratis', '', 'Geralmente incluso na diária. Confirme na recepção.'],
+  'praia-porto-dunas': ['sol', 'gratis'],
+  'vila-azul': ['misto', 'gratis', 'Lojas e restaurantes cobertos; a orla é ao ar livre.', 'Passear é grátis; consumo à parte.'],
+  'arvorar': ['misto', 'medio', 'Os aviários e o arvorismo são ao ar livre. Com chuva forte, perde a graça.'],
+  'jantar-resort': ['coberto', 'gratis', '', 'Conforme o pacote (muitas diárias incluem jantar).'],
+  'jantar-especial': ['coberto', 'alto'],
+  'prainha-rendeiras': ['misto', 'gratis', 'O Centro das Rendeiras é coberto; a praia, não.'],
+  'iguape': ['sol', 'baixo', 'Dunas e pôr do sol pedem tempo aberto.'],
+  'aquiraz-historico': ['coberto', 'gratis'],
+  'aguas-belas': ['sol', 'baixo'],
+  'morro-branco': ['sol', 'medio', 'Com chuva, o labirinto de areia fica escorregadio.'],
+  'cumbuco': ['sol', 'medio', 'Buggy e lagoa pedem sol. Chuva forte costuma cancelar o passeio.'],
+  'canoa-quebrada': ['sol', 'alto', 'Dia longo de estrada: só vale com tempo bom.'],
+  'lagoinha': ['sol', 'medio'],
+  'flecheiras': ['sol', 'medio', 'Depende também da maré baixa.'],
+  'jericoacoara': ['sol', 'alto'],
+  'guaramiranga': ['misto', 'medio', 'Serra com neblina frequente; cafés e restaurantes são cobertos.'],
+  'mercado-central': ['coberto', 'gratis', '', 'Entrada grátis; compras à parte.'],
+  'centro-historico': ['coberto', 'baixo'],
+  'praia-futuro': ['misto', 'medio', 'As barracas são cobertas, mas o programa é praia.', 'Consumo nas barracas.'],
+  'quinta-caranguejo': ['misto', 'medio', 'As barracas são cobertas.', 'Consumo nas barracas.'],
+  'beira-mar': ['sol', 'gratis', 'Calçadão e feirinha ao ar livre.'],
+  'dragao-do-mar': ['misto', 'baixo', 'Museus e planetário cobertos; a Ponte dos Ingleses, não.'],
+  'passeio-barco': ['sol', 'medio'],
+  'parque-coco': ['sol', 'gratis'],
+  'show-humor': ['coberto', 'medio'],
+  'shopping': ['coberto', 'gratis', 'Bom plano B para dia de chuva.', 'Compras e almoço à parte.'],
+  'tapioqueiras': ['coberto', 'baixo'],
+  'coco-bambu': ['coberto', 'alto'],
+  'comida-regional': ['coberto', 'medio'],
+  'voo-ida': ['coberto', null],
+  'voo-volta': ['coberto', null],
+  'transfer-chegada': ['coberto', 'baixo', '', 'Van para 7 ≈ R$ 200–300 no total.'],
+  'transfer-volta': ['coberto', 'baixo', '', 'Van para 7 ≈ R$ 200–300 no total.'],
+  'mercado-bebe': ['coberto', 'baixo'],
+  'descanso': ['coberto', 'gratis'],
+  'checkout': ['coberto', 'gratis'],
+};
+
+ATIVIDADES.forEach((a) => {
+  Object.assign(a, SAIBA_MAIS[a.id] || {});
+  const [clima, custo, climaNota, custoNota] = TEMPO_E_CUSTO[a.id] || [];
+  Object.assign(a, { clima: clima || null, custo: custo || null, climaNota: climaNota || '', custoNota: custoNota || '' });
+});

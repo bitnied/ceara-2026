@@ -180,10 +180,33 @@
   }
   function textoEncaixe(e) {
     if (e.fechado) return { cls: 'ruim', txt: 'Normalmente fechado neste dia' };
+    if (e.climaRuim) return { cls: 'ruim', txt: 'Depende de tempo bom' };
     if (e.nao.length) return { cls: 'ruim', txt: `Não recomendado para ${listaNomes(e.nao)}` };
     if (e.ressalvas.length) return { cls: 'medio', txt: `Com ressalvas para ${listaNomes(e.ressalvas)}` };
+    if (e.climaMedio) return { cls: 'medio', txt: 'Melhor com tempo bom' };
     if (e.foraPeriodo) return { cls: 'medio', txt: 'Combina mais com outro período' };
     return { cls: 'bom', txt: 'Combina com todos do grupo' };
+  }
+
+  /* ---- tempo e custo ---- */
+  const CHUVA_LIMIAR = 50;
+  const CUSTO_TXT = { gratis: 'Grátis', baixo: '$ baixo', medio: '$$ médio', alto: '$$$ alto' };
+  const ORDEM_CUSTO = { gratis: 0, baixo: 1, medio: 2, alto: 3 };
+  function chuvaDoDia(iso) { const t = tempo && tempo[iso]; return t ? (t.chuva ?? 0) : null; }
+  function tagClima(a) {
+    if (!a || !a.clima || a.cat === 'logistica') return '';
+    return `<span class="tag clima-${a.clima}" title="${esc(NIVEIS_CLIMA[a.clima].nome)}">${icon(ICONE_CLIMA[a.clima])}${esc(NIVEIS_CLIMA[a.clima].curto)}</span>`;
+  }
+  function tagCusto(a) {
+    if (!a || !a.custo) return '';
+    return `<span class="tag custo-${a.custo}" title="${esc(NIVEIS_CUSTO[a.custo].nome)}: ${esc(NIVEIS_CUSTO[a.custo].faixa)}">${esc(CUSTO_TXT[a.custo])}</span>`;
+  }
+  function avisoChuva(act, iso) {
+    const c = chuvaDoDia(iso);
+    if (c == null || !act || !act.clima) return '';
+    if (act.clima === 'sol' && c >= CHUVA_LIMIAR) return `Previsão de chuva (${c}%): este passeio depende de tempo bom`;
+    if (act.clima === 'misto' && c >= 70) return `Previsão de chuva (${c}%): vale ter um plano B`;
+    return '';
   }
 
   function avisosDoItem(item, iso) {
@@ -196,6 +219,8 @@
     if (e.nao.length) out.push(`Não recomendado para ${listaNomes(e.nao)}`);
     const leves = item.q.map(pessoa).filter((p) => p && p.leve);
     if (act.intensidade === 'intensa' && leves.length) out.push(`Puxado para quem prefere ritmo leve (${listaNomes(leves.map((p) => p.nome))})`);
+    const ch = avisoChuva(act, iso);
+    if (ch) out.push(ch);
     return out;
   }
 
@@ -312,6 +337,8 @@
     if (iso === hoje) b.push('<span class="badge hoje">Hoje</span>');
     if (d.feriado) b.push(`<span class="badge feriado">Feriado · ${esc(d.feriado)}</span>`);
     if (!abreNoDia(atividade('bp-aquapark'), iso)) b.push('<span class="badge fechado">Beach Park costuma fechar</span>');
+    const c = chuvaDoDia(iso);
+    if (c != null && c >= CHUVA_LIMIAR) b.push(`<span class="badge chuva">${icon('rain')}Chance de chuva ${c}%</span>`);
     return b.join('');
   }
   function linhaTempo(iso) {
@@ -431,6 +458,7 @@
         <p class="item-quando"><b>${it.h ? esc(it.h) : 'Sem horário'}</b>${act.dur ? ` · ${duracaoTxt(act.dur)}` : ''}</p>
         <h4 class="item-titulo"><button data-action="saber" data-a="${act.id}">${esc(act.nome)}</button></h4>
         ${meta ? `<p class="item-meta">${meta}</p>` : ''}
+        ${act.cat !== 'logistica' && (act.clima || act.custo) ? `<p class="tags">${tagClima(act)}${tagCusto(act)}</p>` : ''}
         ${it.n ? `<p class="item-nota">${esc(it.n)}</p>` : ''}
       </div>
       <div class="item-acoes">
@@ -442,6 +470,7 @@
           ${it.q.length && it.q.length < state.pessoas.length ? avatares(it.q, 'sm') : `<span class="iq-ic">${icon('users')}</span>`}<span class="iq-nome">${esc(it.q.length ? (it.q.length === state.pessoas.length ? `Todos (${it.q.length})` : nomesDe(it.q)) : 'Ninguém')}</span><span class="iq-acao">Opções${icon('right')}</span>
         </button>
         ${avisos.map((a) => `<p class="aviso">${icon('alert')}${esc(a)}</p>`).join('')}
+        ${avisoChuva(act, iso) ? `<button class="btn-txt" data-action="grupo-item" data-id="${it.id}" data-chuva="1">${icon('roof')}Ver opções para dia de chuva</button>` : ''}
       </div>
     </article>`;
   }
@@ -464,7 +493,7 @@
           return `<article class="semana-dia ${d === hoje ? 'hoje' : ''}">
             <header class="sd-head">
               <button class="sd-abrir" data-action="abrir-dia" data-d="${d}">
-                <span class="sd-data">${dataCurta(d)}${t ? ` <small>${t.max}°</small>` : ''}${info.feriado ? ' <small>feriado</small>' : ''}</span>
+                <span class="sd-data">${dataCurta(d)}${t ? ` <small>${t.max}°${t.chuva >= CHUVA_LIMIAR ? ` · chuva ${t.chuva}%` : ''}</small>` : ''}${info.feriado ? ' <small>feriado</small>' : ''}</span>
                 <span class="sd-titulo">${esc(info.titulo)}</span>
               </button>
               <button class="btn-txt" data-action="alternativas" data-d="${d}">Planos</button>
@@ -502,6 +531,8 @@
         if (f === 'crianca' && (a.publico?.crianca ?? 2) < 2) return false;
         if (f === 'perto' && (a.km || 0) > 30) return false;
         if (f === 'leve' && a.intensidade !== 'leve') return false;
+        if (f === 'chuva' && (a.clima !== 'coberto' || a.cat === 'logistica')) return false;
+        if (f === 'barato' && (!(a.custo === 'gratis' || a.custo === 'baixo') || a.cat === 'logistica')) return false;
       }
       return true;
     });
@@ -509,7 +540,7 @@
 
   function viewExplorar() {
     const cats = [['todas', 'Tudo'], ['favs', 'Favoritos'], ...Object.entries(CATEGORIAS).map(([k, v]) => [k, v.nome])];
-    const filtros = [['bebe', `Bom para ${nomeTipo('bebe')}`], ['idosos', 'Bom para os idosos'], ['crianca', `Bom para ${nomeTipo('crianca')}`], ['leve', 'Ritmo leve'], ['perto', 'Até 30 km']];
+    const filtros = [['bebe', `Bom para ${nomeTipo('bebe')}`], ['idosos', 'Bom para os idosos'], ['crianca', `Bom para ${nomeTipo('crianca')}`], ['leve', 'Ritmo leve'], ['perto', 'Até 30 km'], ['chuva', 'Funciona com chuva'], ['barato', 'Grátis ou baixo custo']];
     return `
       <div class="secao-head">
         <h2>Explorar</h2>
@@ -537,6 +568,7 @@
             <span class="ca-cat">${esc(CATEGORIAS[a.cat]?.nome || 'Personalizado')}${a.km ? ` · ${esc(a.tempo)}` : ''}${state.favs.includes(a.id) ? ' · ★ favorito' : ''}</span>
             <span class="ca-nome">${esc(a.nome)}</span>
             <span class="ca-resumo">${esc(a.resumo || '')}</span>
+            ${a.clima || a.custo ? `<span class="tags">${tagClima(a)}${tagCusto(a)}</span>` : ''}
           </span>
         </button>
         <div class="ca-rodape">
@@ -667,10 +699,30 @@
       ${item ? `<p class="dica-sel">${divide
         ? `${icon('split')}<span>Escolher agora <b>divide o grupo</b>: ${esc(nomesDe(ctx.q))} vão para o novo programa no mesmo horário e os demais continuam em ${esc(actAtual.nome)}.</span>`
         : `${icon('swap')}<span>Desmarque pessoas para dividir o grupo. Com todos marcados, a escolha troca o programa inteiro.</span>`}</p>` : ''}
+      ${filtrosPlanejar(ctx)}
       <div class="busca">${icon('search')}<input type="search" data-input="busca-plan" placeholder="Buscar…" value="${esc(ctx.busca || '')}" aria-label="Buscar programa"></div>
       <div id="plan-lista">${listaPlanejar(ctx)}</div>
       <button class="btn largo" data-action="custom-novo">${icon('plus')}Criar programa personalizado</button>
     `, { tipo: 'planejar', ref: ctx });
+  }
+
+  function filtrosPlanejar(ctx) {
+    const c = chuvaDoDia(ctx.d);
+    const opcao = (acao, v, atual, txt, ic) => `<button type="button" class="chip sutil ${atual === v ? 'on' : ''}" data-action="${acao}" data-v="${v}" aria-pressed="${atual === v}">${ic ? icon(ic) : ''}${txt}</button>`;
+    return `<div class="filtros-plan">
+      <div class="filtro-linha" role="group" aria-label="Tempo">
+        <span class="fl-rot">Tempo</span>
+        ${opcao('plan-tempo', 'qualquer', ctx.tempo, 'Qualquer tempo')}
+        ${opcao('plan-tempo', 'chuva', ctx.tempo, 'Dia de chuva', 'rain')}
+      </div>
+      ${c != null ? `<p class="fl-nota">Previsão para ${dataCurta(ctx.d)}: chance de chuva de ${c}%.${c >= CHUVA_LIMIAR ? ' Por isso o filtro de dia de chuva já veio ligado.' : ''}</p>` : ''}
+      <div class="filtro-linha" role="group" aria-label="Custo">
+        <span class="fl-rot">Custo</span>
+        ${opcao('plan-custo', 'qualquer', ctx.custo, 'Qualquer')}
+        ${opcao('plan-custo', 'baixo', ctx.custo, 'Grátis ou baixo')}
+        ${opcao('plan-custo', 'medio', ctx.custo, 'Até médio')}
+      </div>
+    </div>`;
   }
 
   function listaPlanejar(ctx) {
@@ -680,11 +732,17 @@
     const lista = [...ATIVIDADES, ...state.custom]
       .filter((a) => !item || a.id !== item.a)
       .filter((a) => busca ? `${a.nome} ${a.local} ${a.resumo}`.toLowerCase().includes(busca) : (a.cat !== 'logistica' || a.id === 'descanso'))
-      .map((a) => ({ a, e: encaixe(a, ctx.q, ctx.d, ctx.p) }));
+      .filter((a) => ctx.custo === 'qualquer' || !a.custo || ORDEM_CUSTO[a.custo] <= ORDEM_CUSTO[ctx.custo])
+      .map((a) => {
+        const e = encaixe(a, ctx.q, ctx.d, ctx.p);
+        e.climaRuim = ctx.tempo === 'chuva' && a.clima === 'sol';
+        e.climaMedio = ctx.tempo === 'chuva' && a.clima === 'misto';
+        return { a, e };
+      });
     const bons = []; const medios = []; const ruins = [];
     lista.forEach((x) => {
-      if (x.e.fechado || x.e.nivel === 0) ruins.push(x);
-      else if (x.e.nivel === 1 || x.e.foraPeriodo) medios.push(x);
+      if (x.e.fechado || x.e.nivel === 0 || x.e.climaRuim) ruins.push(x);
+      else if (x.e.nivel === 1 || x.e.foraPeriodo || x.e.climaMedio) medios.push(x);
       else bons.push(x);
     });
     const ord = (a, b) => (a.a.km || 0) - (b.a.km || 0);
@@ -694,7 +752,7 @@
       return `<li class="sug">
         <button class="sug-info" data-action="saber" data-a="${a.id}">
           ${miniatura(a, 'thumb')}
-          <span class="sug-txt"><b>${esc(a.nome)}</b><small>${[a.km ? `${a.tempo} de carro` : 'Perto do resort', duracaoTxt(a.dur)].filter(Boolean).map(esc).join(' · ')}</small><small class="enc ${t.cls}">${esc(t.txt)}</small></span>
+          <span class="sug-txt"><b>${esc(a.nome)}</b><small>${[a.km ? `${a.tempo} de carro` : 'Perto do resort', duracaoTxt(a.dur)].filter(Boolean).map(esc).join(' · ')}</small><span class="tags">${tagClima(a)}${tagCusto(a)}</span><small class="enc ${t.cls}">${esc(t.txt)}</small></span>
         </button>
         <button class="btn-mini" data-action="escolher" data-a="${a.id}">Escolher</button>
       </li>`;
@@ -702,8 +760,13 @@
     return `
       ${bons.length ? `<h3 class="sh-sub">Combinam com ${esc(nomesDe(ctx.q))}</h3><ul class="sugestoes">${bons.map(linha).join('')}</ul>` : ''}
       ${medios.length ? `<h3 class="sh-sub">Possíveis, com ressalvas</h3><ul class="sugestoes">${medios.map(linha).join('')}</ul>` : ''}
-      ${ruins.length ? `<details class="mais-opcoes"><summary>Não recomendados ou fechados neste dia (${ruins.length})</summary><ul class="sugestoes">${ruins.map(linha).join('')}</ul></details>` : ''}
+      ${ruins.length ? `<details class="mais-opcoes"><summary>${ctx.tempo === 'chuva' ? 'Dependem de tempo bom, não recomendados ou fechados' : 'Não recomendados ou fechados neste dia'} (${ruins.length})</summary><ul class="sugestoes">${ruins.map(linha).join('')}</ul></details>` : ''}
       ${!lista.length ? '<p class="vazio">Nada encontrado.</p>' : ''}`;
+  }
+
+  function novoCtxPlan(base, tempoForcado) {
+    const c = chuvaDoDia(base.d);
+    return { busca: '', custo: 'qualquer', tempo: tempoForcado || (c != null && c >= CHUVA_LIMIAR ? 'chuva' : 'qualquer'), ...base };
   }
 
   /* Aplica a escolha feita na folha de planejar */
@@ -773,7 +836,8 @@
         ${a.duracao ? `<div><dt>Duração</dt><dd>${esc(a.duracao)}</dd></div>` : ''}
         ${a.cat !== 'custom' ? `<div><dt>Funciona</dt><dd>${diasTxt}</dd></div>` : ''}
         ${a.intensidade ? `<div><dt>Ritmo</dt><dd>${esc(a.intensidade[0].toUpperCase() + a.intensidade.slice(1))}</dd></div>` : ''}
-        ${a.preco ? `<div class="largo"><dt>Custo</dt><dd>${esc(a.preco)}</dd></div>` : ''}
+        ${a.custo || a.preco ? `<div class="largo"><dt>Custo</dt><dd>${a.custo ? `<b>${esc(NIVEIS_CUSTO[a.custo].nome)}</b> (${esc(NIVEIS_CUSTO[a.custo].faixa)})` : ''}${a.preco && a.preco !== '—' ? `${a.custo ? '<br>' : ''}${esc(a.preco)}` : ''}${a.custoNota ? `<br>${esc(a.custoNota)}` : ''}</dd></div>` : ''}
+        ${a.clima && a.cat !== 'logistica' ? `<div class="largo"><dt>Tempo</dt><dd><b>${esc(NIVEIS_CLIMA[a.clima].nome)}</b>${a.climaNota ? `. ${esc(a.climaNota)}` : ''}</dd></div>` : ''}
       </dl>
       ${a.publico ? `<h3 class="sh-sub">Para a família</h3><ul class="publico">
         ${linhaPub('bebe', nomeTipo('bebe'))}${linhaPub('idosos', nomeTipo('idoso'))}${linhaPub('crianca', nomeTipo('crianca'))}
@@ -905,6 +969,14 @@
         <label class="campo">Nome <input name="nome" required placeholder="Ex.: Almoço no restaurante X" autofocus></label>
         <label class="campo">Onde <input name="local" placeholder="Bairro, cidade"></label>
         <label class="campo">Descrição <textarea name="resumo" rows="2"></textarea></label>
+        <div class="linha2">
+          <label class="campo">Tempo
+            <select name="clima">${Object.entries(NIVEIS_CLIMA).map(([k, v]) => `<option value="${k}" ${k === 'misto' ? 'selected' : ''}>${esc(v.nome)}</option>`).join('')}</select>
+          </label>
+          <label class="campo">Custo
+            <select name="custo">${Object.entries(NIVEIS_CUSTO).map(([k, v]) => `<option value="${k}" ${k === 'medio' ? 'selected' : ''}>${esc(v.nome)}</option>`).join('')}</select>
+          </label>
+        </div>
         <div class="sh-rodape"><button class="btn primary grande" type="submit">${plan ? `Criar e escolher para ${esc(nomesDe(plan.q))}` : 'Criar'}</button></div>
       </form>
     `, { tipo: 'custom', plan });
@@ -1168,18 +1240,26 @@
         const p = el.dataset.p;
         const livres = livresNoPeriodo(d, p).map((x) => x.id);
         const q = el.dataset.q ? el.dataset.q.split(',') : (livres.length ? livres : todasPessoas());
-        mostrar(sheetPlanejar, { d, p, q, busca: '' });
+        mostrar(sheetPlanejar, novoCtxPlan({ d, p, q }));
         break;
       }
       case 'grupo-item': {
         const r = acharItem(el.dataset.id);
-        if (r) mostrar(sheetPlanejar, { d: r.d, p: r.it.p, h: r.it.h, itemId: r.it.id, q: [...r.it.q], busca: '' });
+        if (r) mostrar(sheetPlanejar, novoCtxPlan({ d: r.d, p: r.it.p, h: r.it.h, itemId: r.it.id, q: [...r.it.q] }, el.dataset.chuva ? 'chuva' : null));
         break;
       }
       case 'plan-pessoa': {
         const ctx = ctxSheet.ref;
         const st = sheetBody.scrollTop;
         togglePessoa(ctx.q, el);
+        substituir(sheetPlanejar, ctx);
+        sheetBody.scrollTop = st;
+        break;
+      }
+      case 'plan-tempo': case 'plan-custo': {
+        const ctx = ctxSheet.ref;
+        const st = sheetBody.scrollTop;
+        ctx[act === 'plan-tempo' ? 'tempo' : 'custo'] = el.dataset.v;
         substituir(sheetPlanejar, ctx);
         sheetBody.scrollTop = st;
         break;
@@ -1320,7 +1400,7 @@
       const nome = (fd.get('nome') || '').trim();
       if (!nome) return;
       const local = (fd.get('local') || '').trim();
-      const nova = { id: 'c' + Math.random().toString(36).slice(2, 8), nome, cat: 'custom', local, resumo: (fd.get('resumo') || '').trim(), periodos: null, dias: null, maps: `${nome} ${local}`, dur: 90 };
+      const nova = { id: 'c' + Math.random().toString(36).slice(2, 8), nome, cat: 'custom', local, resumo: (fd.get('resumo') || '').trim(), periodos: null, dias: null, maps: `${nome} ${local}`, dur: 90, clima: fd.get('clima') || 'misto', custo: fd.get('custo') || null };
       state.custom.push(nova);
       salvar();
       const plan = ctxSheet.plan;
